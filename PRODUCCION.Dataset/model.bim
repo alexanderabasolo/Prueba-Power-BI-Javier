@@ -930,9 +930,21 @@
               }
             ],
             "displayFolder": "MENSUALES",
-            "expression": "SUM(Fact_ProduccionTepsa[PRODUCCION_KGS]) / 1000",
+            "expression": "SUM(Fact_ProduccionTepsa[PRODUCCION_KGS]) / 2000",
             "formatString": "#,0",
             "lineageTag": "95fbefc0-5131-4c36-ac30-4d7cf736ede8"
+          },
+          {
+            "name": "PRODUCCION_TEPSA_TN_2",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "displayFolder": "MENSUALES",
+            "expression": "SUM(Fact_ProduccionTepsa[PRODUCCION_KGS]) / 1000",
+            "formatString": "#,0",
           },
           {
             "name": "PRODUCCION_TEPSA_TN_AA",
