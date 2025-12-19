@@ -1,0 +1,153 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 123.63636363636363,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 123.63636363636363,
+            "y": 5
+          },
+          "nodeIndex": "1-Medidas",
+          "nodeLineageTag": "c6be4cdf-f812-4439-a0ba-0548b3701ab0",
+          "size": {
+            "height": 376.82828282828285,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 793.82828282828291,
+            "y": 375.90909090909071
+          },
+          "nodeIndex": "DimCalendario",
+          "nodeLineageTag": "e3005af5-6a94-4e8c-9d2a-b5c25b41d45f",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 2,
+          "expandedHeight": 220
+        },
+        {
+          "location": {
+            "x": 367.67676767676789,
+            "y": 270.5555555555556
+          },
+          "nodeIndex": "Fact_ProduccionGPFyFMAROC",
+          "nodeLineageTag": "29ae1e57-e2c1-4cc1-8381-1874d037be02",
+          "size": {
+            "height": 200,
+            "width": 330.36363636363626
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 788.04040404040393,
+            "y": 504.74242424242414
+          },
+          "nodeIndex": "Fact_ProduccionTepsa",
+          "nodeLineageTag": "baa19304-db21-4206-b5f0-2a01d64fa671",
+          "size": {
+            "height": 233.090909090909,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 792.989898989899,
+            "y": 0
+          },
+          "nodeIndex": "Dim_Lineas",
+          "nodeLineageTag": "4ec5286a-cb33-494b-a8e6-efaaf1d8a781",
+          "size": {
+            "height": 242.1010101010101,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1492.2424242424242,
+            "y": 408.93063495478054
+          },
+          "nodeIndex": "Dim_ID_Empresa",
+          "nodeLineageTag": "8ddef346-eeab-4ce1-a8f0-1e6fe646bf35",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1499.7780126803666,
+            "y": 209.36514353307217
+          },
+          "nodeIndex": "Dim_ID_Planta",
+          "nodeLineageTag": "7fc19342-1dad-4364-b531-852c60dd2f7a",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1498.4306038356574,
+            "y": 0
+          },
+          "nodeIndex": "Dim_ID_Seccion",
+          "nodeLineageTag": "4550234c-9478-49b3-943d-c6c700c7fa04",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1191.8342841292583,
+            "y": 0
+          },
+          "nodeIndex": "Dim_ID_Subseccion",
+          "nodeLineageTag": "ccfb263f-1fa1-4904-99ad-337aa44da86c",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1764.5860934884472,
+            "y": 407.1388888888888
+          },
+          "nodeIndex": "Función invocada",
+          "nodeLineageTag": "18ac9d9d-bf52-4bd1-b937-5483f975bcec",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Todas las tablas",
+      "zoomValue": 80,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": true,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Todas las tablas",
+  "defaultDiagram": "Todas las tablas"
+}

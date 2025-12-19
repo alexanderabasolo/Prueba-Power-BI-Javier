@@ -1,0 +1,1904 @@
+{
+  "compatibilityLevel": 1567,
+  "model": {
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "2.123.742.0 (23.11)"
+      },
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"Produccion Ferro\",\"Produccion Braseli\",\"Parámetro1\",\"Transformar archivo de ejemplo\",\"Archivo de ejemplo\",\"Transformar archivo\",\"Produccion F Maroc\",\"Parámetro2\",\"Transformar archivo de ejemplo (2)\",\"Archivo de ejemplo (2)\",\"Transformar archivo (2)\",\"Parámetro3\",\"Archivo de ejemplo (3)\",\"Transformar archivo (3)\",\"Produccion TYPIMA\",\"Parámetro4\",\"Archivo de ejemplo (4)\",\"Transformar archivo (4)\",\"Fact_ProduccionTepsa\",\"Parámetro5\",\"Archivo de ejemplo (5)\",\"Transformar archivo (5)\",\"Dim_Lineas\",\"Dim_Clasificacion_Tepsa\",\"1-Medidas\",\"Fact_ProduccionGPFyFMAROC\",\"Dim_ID_Empresa\",\"Dim_ID_Planta\",\"Dim_ID_Seccion\",\"Dim_ID_Subseccion\",\"Diagnostics_Aggregated_2024-05-31_13:32\",\"Consulta1\",\"Función invocada\"]"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"WebModelingEdit\",\"DaxQueryView_Desktop\",\"DevMode\"]"
+      }
+    ],
+    "culture": "es-ES",
+    "cultures": [
+      {
+        "name": "es-ES",
+        "linguisticMetadata": {
+          "content": {
+            "Language": "en-US",
+            "Version": "1.0.0"
+          },
+          "contentType": "json"
+        }
+      }
+    ],
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "expressions": [
+      {
+        "name": "Produccion Braseli",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = Folder.Files(\"Z:\\PRODUCCION BI\\Produccion Braseli\"),",
+          "    #\"Archivos ocultos filtrados1\" = Table.SelectRows(Origen, each [Attributes]?[Hidden]? <> true),",
+          "    #\"Invocar función personalizada1\" = Table.AddColumn(#\"Archivos ocultos filtrados1\", \"Transformar archivo\", each #\"Transformar archivo\"([Content])),",
+          "    #\"Columnas con nombre cambiado1\" = Table.RenameColumns(#\"Invocar función personalizada1\", {\"Name\", \"Source.Name\"}),",
+          "    #\"Otras columnas quitadas1\" = Table.SelectColumns(#\"Columnas con nombre cambiado1\", {\"Source.Name\", \"Transformar archivo\"}),",
+          "    #\"Columna de tabla expandida1\" = Table.ExpandTableColumn(#\"Otras columnas quitadas1\", \"Transformar archivo\", Table.ColumnNames(#\"Transformar archivo\"(#\"Archivo de ejemplo\"))),",
+          "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Columna de tabla expandida1\",{{\"Source.Name\", type text}, {\"Column1\", type text}, {\"Column2\", type text}, {\"Column3\", type text}, {\"Column4\", type text}, {\"Column5\", type text}, {\"Column6\", type text}, {\"Column7\", type text}, {\"Column8\", type text}, {\"Column9\", type text}, {\"Column10\", type text}, {\"Column11\", type text}, {\"Column12\", type text}}),",
+          "    #\"Filas filtradas\" = Table.SelectRows(#\"Tipo cambiado\", each ([Column2] = \"10301\" or [Column2] = \"10302\" or [Column2] = \"10303\" or [Column2] = \"10602\" or [Column2] = \"10603\" or [Column2] = \"11301\")),",
+          "    #\"Valor reemplazado\" = Table.ReplaceValue(#\"Filas filtradas\",\".xls\",\"\",Replacer.ReplaceText,{\"Source.Name\"}),",
+          "    #\"Texto en mayúsculas\" = Table.TransformColumns(#\"Valor reemplazado\",{{\"Source.Name\", Text.Upper, type text}}),",
+          "    #\"Dividir columna por delimitador\" = Table.SplitColumn(#\"Texto en mayúsculas\", \"Source.Name\", Splitter.SplitTextByDelimiter(\"-\", QuoteStyle.Csv), {\"Source.Name.1\", \"Source.Name.2\", \"Source.Name.3\", \"Source.Name.4\"}),",
+          "    #\"Tipo cambiado1\" = Table.TransformColumnTypes(#\"Dividir columna por delimitador\",{{\"Source.Name.1\", type text}, {\"Source.Name.2\", type text}, {\"Source.Name.3\", type text}, {\"Source.Name.4\", Int64.Type}}),",
+          "    #\"Columnas con nombre cambiado\" = Table.RenameColumns(#\"Tipo cambiado1\",{{\"Source.Name.1\", \"EMPRESA\"}, {\"Source.Name.2\", \"PLANTA\"}, {\"Source.Name.3\", \"MES\"}, {\"Source.Name.4\", \"AÑO\"}, {\"Column2\", \"CODIGO\"}, {\"Column3\", \"PRODUCCION_TN\"}}),",
+          "    #\"Otras columnas quitadas\" = Table.SelectColumns(#\"Columnas con nombre cambiado\",{\"EMPRESA\", \"PLANTA\", \"MES\", \"AÑO\", \"CODIGO\", \"PRODUCCION_TN\"}),",
+          "    #\"Tipo cambiado2\" = Table.TransformColumnTypes(#\"Otras columnas quitadas\",{{\"EMPRESA\", type text}, {\"PRODUCCION_TN\", type number}}),",
+          "    #\"Columna condicional agregada\" = Table.AddColumn(#\"Tipo cambiado2\", \"NUM_MES\", each if [MES] = \"ENERO\" then 1 else if [MES] = \"FEBRERO\" then 2 else if [MES] = \"MARZO\" then 3 else if [MES] = \"ABRIL\" then 4 else if [MES] = \"MAYO\" then 5 else if [MES] = \"JUNIO\" then 6 else if [MES] = \"JULIO\" then 7 else if [MES] = \"AGOSTO\" then 8 else if [MES] = \"SEPTIEMBRE\" then 9 else if [MES] = \"OCTUBRE\" then 10 else if [MES] = \"NOVIEMBRE\" then 11 else if [MES] = \"DICIEMBRE\" then 12 else null),",
+          "    #\"Personalizada agregada\" = Table.AddColumn(#\"Columna condicional agregada\", \"DIA\", each 1),",
+          "    #\"Tipo cambiado3\" = Table.TransformColumnTypes(#\"Personalizada agregada\",{{\"NUM_MES\", Int64.Type}, {\"DIA\", Int64.Type}}),",
+          "    #\"Columnas combinadas\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Tipo cambiado3\", {{\"DIA\", type text}, {\"NUM_MES\", type text}, {\"AÑO\", type text}}, \"es-ES\"),{\"DIA\", \"NUM_MES\", \"AÑO\"},Combiner.CombineTextByDelimiter(\"/\", QuoteStyle.None),\"FECHA\"),",
+          "    #\"Tipo cambiado4\" = Table.TransformColumnTypes(#\"Columnas combinadas\",{{\"FECHA\", type date}}),",
+          "    #\"Otras columnas quitadas2\" = Table.SelectColumns(#\"Tipo cambiado4\",{\"FECHA\", \"CODIGO\", \"PRODUCCION_TN\"})",
+          "in",
+          "    #\"Otras columnas quitadas2\""
+        ],
+        "kind": "m",
+        "lineageTag": "4c244f4c-9214-451d-89e4-3649e11a841d",
+        "queryGroup": "Produccion"
+      },
+      {
+        "name": "Parámetro1",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Binary"
+          }
+        ],
+        "expression": "#\"Archivo de ejemplo\" meta [IsParameterQuery=true, BinaryIdentifier=#\"Archivo de ejemplo\", Type=\"Binary\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "e8c3fec3-73b4-4e4f-aa80-8a461f732c4c",
+        "queryGroup": "Transformar archivo de Produccion Braseli\\Consultas auxiliares"
+      },
+      {
+        "name": "Transformar archivo de ejemplo",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = Excel.Workbook(Parámetro1, null, true),",
+          "    Datos1 = Origen{[Name=\"Datos\"]}[Data]",
+          "in",
+          "    Datos1"
+        ],
+        "kind": "m",
+        "lineageTag": "6dfa4430-c214-4e3e-89d7-3cb428fe8739",
+        "queryGroup": "Transformar archivo de Produccion Braseli"
+      },
+      {
+        "name": "Archivo de ejemplo",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Binary"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = Folder.Files(\"Z:\\PRODUCCION BI\\Produccion Braseli\"),",
+          "    Navegación1 = Origen{0}[Content]",
+          "in",
+          "    Navegación1"
+        ],
+        "kind": "m",
+        "lineageTag": "75776894-39ef-4cb0-8014-f00c82893355",
+        "queryGroup": "Transformar archivo de Produccion Braseli\\Consultas auxiliares"
+      },
+      {
+        "name": "Transformar archivo",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = (Parámetro1 as binary) => let",
+          "    Origen = Excel.Workbook(Parámetro1, null, true),",
+          "    Datos1 = Origen{[Name=\"Datos\"]}[Data]",
+          "in",
+          "    Datos1",
+          "in",
+          "    Origen"
+        ],
+        "kind": "m",
+        "lineageTag": "3dff22d2-cdfb-4eb3-962f-bd6fe5932525",
+        "mAttributes": "[ FunctionQueryBinding = \"{\"\"exemplarFormulaName\"\":\"\"Transformar archivo de ejemplo\"\"}\" ]",
+        "queryGroup": "Transformar archivo de Produccion Braseli\\Consultas auxiliares"
+      },
+      {
+        "name": "Produccion F Maroc",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = Folder.Files(\"Z:\\PRODUCCION BI\\Produccion F.Maroc\"),",
+          "    #\"Archivos ocultos filtrados1\" = Table.SelectRows(Origen, each [Attributes]?[Hidden]? <> true),",
+          "    #\"Invocar función personalizada1\" = Table.AddColumn(#\"Archivos ocultos filtrados1\", \"Transformar archivo (2)\", each #\"Transformar archivo (2)\"([Content])),",
+          "    #\"Columnas con nombre cambiado1\" = Table.RenameColumns(#\"Invocar función personalizada1\", {\"Name\", \"Source.Name\"}),",
+          "    #\"Otras columnas quitadas1\" = Table.SelectColumns(#\"Columnas con nombre cambiado1\", {\"Source.Name\", \"Transformar archivo (2)\"}),",
+          "    #\"Columna de tabla expandida1\" = Table.ExpandTableColumn(#\"Otras columnas quitadas1\", \"Transformar archivo (2)\", Table.ColumnNames(#\"Transformar archivo (2)\"(#\"Archivo de ejemplo (2)\"))),",
+          "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Columna de tabla expandida1\",{{\"Source.Name\", type text}, {\"Column1\", type text}, {\"Column2\", type text}, {\"Column3\", type text}, {\"Column4\", type text}, {\"Column5\", type text}, {\"Column6\", type text}, {\"Column7\", type text}, {\"Column8\", type text}, {\"Column9\", type text}, {\"Column10\", type text}, {\"Column11\", type text}, {\"Column12\", type text}}),",
+          "    #\"Filas filtradas\" = Table.SelectRows(#\"Tipo cambiado\", each ([Column2] <> null and [Column2] <> \"9909\" and [Column2] <> \"CÓDIGO MÁQUINA\" and [Column2] <> \"MES: 1\" and [Column2] <> \"MES: 2\")),",
+          "    #\"Valor reemplazado\" = Table.ReplaceValue(#\"Filas filtradas\",\".xls\",\"\",Replacer.ReplaceText,{\"Source.Name\"}),",
+          "    #\"Texto en mayúsculas\" = Table.TransformColumns(#\"Valor reemplazado\",{{\"Source.Name\", Text.Upper, type text}}),",
+          "    #\"Dividir columna por delimitador\" = Table.SplitColumn(#\"Texto en mayúsculas\", \"Source.Name\", Splitter.SplitTextByDelimiter(\"-\", QuoteStyle.Csv), {\"Source.Name.1\", \"Source.Name.2\", \"Source.Name.3\", \"Source.Name.4\"}),",
+          "    #\"Tipo cambiado1\" = Table.TransformColumnTypes(#\"Dividir columna por delimitador\",{{\"Source.Name.1\", type text}, {\"Source.Name.2\", type text}, {\"Source.Name.3\", type text}, {\"Source.Name.4\", Int64.Type}}),",
+          "    #\"Columnas con nombre cambiado\" = Table.RenameColumns(#\"Tipo cambiado1\",{{\"Source.Name.1\", \"EMPRESA\"}, {\"Source.Name.2\", \"PLANTA\"}, {\"Source.Name.3\", \"MES\"}, {\"Source.Name.4\", \"AÑO\"}, {\"Column2\", \"CODIGO\"}, {\"Column3\", \"PRODUCCION_TN\"}}),",
+          "    #\"Otras columnas quitadas\" = Table.SelectColumns(#\"Columnas con nombre cambiado\",{\"EMPRESA\", \"PLANTA\", \"MES\", \"AÑO\", \"CODIGO\", \"PRODUCCION_TN\"}),",
+          "    #\"Tipo cambiado2\" = Table.TransformColumnTypes(#\"Otras columnas quitadas\",{{\"EMPRESA\", type text}, {\"PRODUCCION_TN\", type number}}),",
+          "    #\"Columna condicional agregada\" = Table.AddColumn(#\"Tipo cambiado2\", \"NUM_MES\", each if [MES] = \"ENERO\" then 1 else if [MES] = \"FEBRERO\" then 2 else if [MES] = \"MARZO\" then 3 else if [MES] = \"ABRIL\" then 4 else if [MES] = \"MAYO\" then 5 else if [MES] = \"JUNIO\" then 6 else if [MES] = \"JULIO\" then 7 else if [MES] = \"AGOSTO\" then 8 else if [MES] = \"SEPTIEMBRE\" then 9 else if [MES] = \"OCTUBRE\" then 10 else if [MES] = \"NOVIEMBRE\" then 11 else if [MES] = \"DICIEMBRE\" then 12 else null),",
+          "    #\"Personalizada agregada\" = Table.AddColumn(#\"Columna condicional agregada\", \"DIA\", each 1),",
+          "    #\"Tipo cambiado3\" = Table.TransformColumnTypes(#\"Personalizada agregada\",{{\"NUM_MES\", Int64.Type}, {\"DIA\", Int64.Type}}),",
+          "    #\"Columnas combinadas\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Tipo cambiado3\", {{\"DIA\", type text}, {\"NUM_MES\", type text}, {\"AÑO\", type text}}, \"es-ES\"),{\"DIA\", \"NUM_MES\", \"AÑO\"},Combiner.CombineTextByDelimiter(\"/\", QuoteStyle.None),\"FECHA\"),",
+          "    #\"Tipo cambiado4\" = Table.TransformColumnTypes(#\"Columnas combinadas\",{{\"FECHA\", type date}}),",
+          "    #\"Otras columnas quitadas2\" = Table.SelectColumns(#\"Tipo cambiado4\",{\"FECHA\", \"CODIGO\", \"PRODUCCION_TN\"}),",
+          "    #\"Filas filtradas1\" = Table.SelectRows(#\"Otras columnas quitadas2\", each ([CODIGO] <> \"MES: 10\" and [CODIGO] <> \"MES: 11\" and [CODIGO] <> \"MES: 12\" and [CODIGO] <> \"MES: 3\" and [CODIGO] <> \"MES: 4\" and [CODIGO] <> \"MES: 5\" and [CODIGO] <> \"MES: 6\" and [CODIGO] <> \"MES: 7\" and [CODIGO] <> \"MES: 8\" and [CODIGO] <> \"MES: 9\"))",
+          "in",
+          "    #\"Filas filtradas1\""
+        ],
+        "kind": "m",
+        "lineageTag": "ae45a453-3343-4d99-966e-7ec7fe5338a0",
+        "queryGroup": "Produccion"
+      },
+      {
+        "name": "Parámetro2",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Binary"
+          }
+        ],
+        "expression": "#\"Archivo de ejemplo (2)\" meta [IsParameterQuery=true, BinaryIdentifier=#\"Archivo de ejemplo (2)\", Type=\"Binary\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "ff3454d9-c86e-429d-a722-60f8e5eda563",
+        "queryGroup": "Transformar archivo de Produccion F Maroc\\Consultas auxiliares"
+      },
+      {
+        "name": "Transformar archivo de ejemplo (2)",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = Excel.Workbook(Parámetro2, null, true),",
+          "    Datos1 = Origen{[Name=\"Datos\"]}[Data]",
+          "in",
+          "    Datos1"
+        ],
+        "kind": "m",
+        "lineageTag": "bacd809c-8bcf-40b0-acdc-b10dbf0b1d4c",
+        "queryGroup": "Transformar archivo de Produccion F Maroc"
+      },
+      {
+        "name": "Archivo de ejemplo (2)",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Binary"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = Folder.Files(\"Z:\\PRODUCCION BI\\Produccion F.Maroc\"),",
+          "    Navegación1 = Origen{0}[Content]",
+          "in",
+          "    Navegación1"
+        ],
+        "kind": "m",
+        "lineageTag": "dc1a9a91-ca70-4d81-917a-abb2118bc7ca",
+        "queryGroup": "Transformar archivo de Produccion F Maroc\\Consultas auxiliares"
+      },
+      {
+        "name": "Transformar archivo (2)",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = (Parámetro2 as binary) => let",
+          "    Origen = Excel.Workbook(Parámetro2, null, true),",
+          "    Datos1 = Origen{[Name=\"Datos\"]}[Data]",
+          "in",
+          "    Datos1",
+          "in",
+          "    Origen"
+        ],
+        "kind": "m",
+        "lineageTag": "862d8422-4ada-4b17-8180-8459f44494a2",
+        "mAttributes": "[ FunctionQueryBinding = \"{\"\"exemplarFormulaName\"\":\"\"Transformar archivo de ejemplo (2)\"\"}\" ]",
+        "queryGroup": "Transformar archivo de Produccion F Maroc\\Consultas auxiliares"
+      },
+      {
+        "name": "Produccion Ferro",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = Folder.Files(\"Z:\\PRODUCCION BI\\Produccion Ferro\"),",
+          "    #\"Archivos ocultos filtrados1\" = Table.SelectRows(Origen, each [Attributes]?[Hidden]? <> true),",
+          "    #\"Invocar función personalizada1\" = Table.AddColumn(#\"Archivos ocultos filtrados1\", \"Transformar archivo (3)\", each #\"Transformar archivo (3)\"([Content])),",
+          "    #\"Columnas con nombre cambiado1\" = Table.RenameColumns(#\"Invocar función personalizada1\", {\"Name\", \"Source.Name\"}),",
+          "    #\"Otras columnas quitadas1\" = Table.SelectColumns(#\"Columnas con nombre cambiado1\", {\"Source.Name\", \"Transformar archivo (3)\"}),",
+          "    #\"Columna de tabla expandida1\" = Table.ExpandTableColumn(#\"Otras columnas quitadas1\", \"Transformar archivo (3)\", Table.ColumnNames(#\"Transformar archivo (3)\"(#\"Archivo de ejemplo (3)\"))),",
+          "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Columna de tabla expandida1\",{{\"Source.Name\", type text}, {\"Column1\", type text}, {\"Column2\", type text}, {\"Column3\", type text}, {\"Column4\", type text}, {\"Column5\", type text}, {\"Column6\", type text}, {\"Column7\", type text}, {\"Column8\", type text}, {\"Column9\", type text}, {\"Column10\", type text}, {\"Column11\", type text}, {\"Column12\", type text}}),",
+          "    #\"Filas filtradas\" = Table.SelectRows(#\"Tipo cambiado\", each [Column2] <> null and [Column2] <> \"1301\" and [Column2] <> \"1302\" and [Column2] <> \"1303\" and [Column2] <> \"1501\" and [Column2] <> \"1502\" and [Column2] <> \"2201\" and [Column2] <> \"2202\" and [Column2] <> \"2203\" and [Column2] <> \"2441\" and [Column2] <> \"2442\" and [Column2] <> \"2443\" and [Column2] <> \"2444\" and [Column2] <> \"2445\" and [Column2] <> \"2446\" and [Column2] <> \"2501\" and [Column2] <> \"2502\" and [Column2] <> \"2503\" and [Column2] <> \"2601\" and [Column2] <> \"9909\" and [Column2] <> \"9939\" and [Column2] <> \"9949\" and [Column2] <> \"9959\" and [Column2] <> \"CÓDIGO MÁQUINA\" and [Column2] <> \"MES: 1\" and [Column2] <> \"MES: 2\" and [Column2] <> \"MES: 3\" and [Column2] <> \"MES: 4\" and [Column2] <> \"2199\" and [Column2] <> \"2499\"),",
+          "    #\"Valor reemplazado\" = Table.ReplaceValue(#\"Filas filtradas\",\".xls\",\"\",Replacer.ReplaceText,{\"Source.Name\"}),",
+          "    #\"Texto en mayúsculas\" = Table.TransformColumns(#\"Valor reemplazado\",{{\"Source.Name\", Text.Upper, type text}}),",
+          "    #\"Dividir columna por delimitador\" = Table.SplitColumn(#\"Texto en mayúsculas\", \"Source.Name\", Splitter.SplitTextByDelimiter(\"-\", QuoteStyle.Csv), {\"Source.Name.1\", \"Source.Name.2\", \"Source.Name.3\", \"Source.Name.4\"}),",
+          "    #\"Tipo cambiado1\" = Table.TransformColumnTypes(#\"Dividir columna por delimitador\",{{\"Source.Name.1\", type text}, {\"Source.Name.2\", type text}, {\"Source.Name.3\", type text}, {\"Source.Name.4\", Int64.Type}}),",
+          "    #\"Columnas con nombre cambiado\" = Table.RenameColumns(#\"Tipo cambiado1\",{{\"Source.Name.1\", \"EMPRESA\"}, {\"Source.Name.2\", \"PLANTA\"}, {\"Source.Name.3\", \"MES\"}, {\"Source.Name.4\", \"AÑO\"}, {\"Column2\", \"CODIGO\"}, {\"Column3\", \"PRODUCCION_TN\"}}),",
+          "    #\"Otras columnas quitadas\" = Table.SelectColumns(#\"Columnas con nombre cambiado\",{\"EMPRESA\", \"PLANTA\", \"MES\", \"AÑO\", \"CODIGO\", \"PRODUCCION_TN\"}),",
+          "    #\"Tipo cambiado2\" = Table.TransformColumnTypes(#\"Otras columnas quitadas\",{{\"EMPRESA\", type text}, {\"PRODUCCION_TN\", type number}}),",
+          "    #\"Columna condicional agregada\" = Table.AddColumn(#\"Tipo cambiado2\", \"NUM_MES\", each if [MES] = \"ENERO\" then 1 else if [MES] = \"FEBRERO\" then 2 else if [MES] = \"MARZO\" then 3 else if [MES] = \"ABRIL\" then 4 else if [MES] = \"MAYO\" then 5 else if [MES] = \"JUNIO\" then 6 else if [MES] = \"JULIO\" then 7 else if [MES] = \"AGOSTO\" then 8 else if [MES] = \"SEPTIEMBRE\" then 9 else if [MES] = \"OCTUBRE\" then 10 else if [MES] = \"NOVIEMBRE\" then 11 else if [MES] = \"DICIEMBRE\" then 12 else null),",
+          "    #\"Personalizada agregada\" = Table.AddColumn(#\"Columna condicional agregada\", \"DIA\", each 1),",
+          "    #\"Tipo cambiado3\" = Table.TransformColumnTypes(#\"Personalizada agregada\",{{\"DIA\", Int64.Type}, {\"NUM_MES\", Int64.Type}}),",
+          "    #\"Columnas combinadas\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Tipo cambiado3\", {{\"DIA\", type text}, {\"NUM_MES\", type text}, {\"AÑO\", type text}}, \"es-ES\"),{\"DIA\", \"NUM_MES\", \"AÑO\"},Combiner.CombineTextByDelimiter(\"/\", QuoteStyle.None),\"FECHA\"),",
+          "    #\"Tipo cambiado4\" = Table.TransformColumnTypes(#\"Columnas combinadas\",{{\"FECHA\", type date}}),",
+          "    #\"Otras columnas quitadas2\" = Table.SelectColumns(#\"Tipo cambiado4\",{\"EMPRESA\", \"PLANTA\", \"FECHA\", \"CODIGO\", \"PRODUCCION_TN\"}),",
+          "    #\"Columnas reordenadas\" = Table.ReorderColumns(#\"Otras columnas quitadas2\",{\"CODIGO\", \"EMPRESA\", \"PLANTA\", \"FECHA\", \"PRODUCCION_TN\"}),",
+          "    #\"Columnas quitadas\" = Table.RemoveColumns(#\"Columnas reordenadas\",{\"EMPRESA\", \"PLANTA\"}),",
+          "    #\"Filas filtradas1\" = Table.SelectRows(#\"Columnas quitadas\", each ([CODIGO] <> \"1199\" and [CODIGO] <> \"1299\" and [CODIGO] <> \"MES: 10\" and [CODIGO] <> \"MES: 11\" and [CODIGO] <> \"MES: 12\" and [CODIGO] <> \"MES: 5\" and [CODIGO] <> \"MES: 6\" and [CODIGO] <> \"MES: 7\" and [CODIGO] <> \"MES: 8\" and [CODIGO] <> \"MES: 9\"))",
+          "in",
+          "    #\"Filas filtradas1\""
+        ],
+        "kind": "m",
+        "lineageTag": "05c23020-e56e-4726-a690-b82ea2184471",
+        "queryGroup": "Produccion"
+      },
+      {
+        "name": "Parámetro3",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Binary"
+          }
+        ],
+        "expression": "#\"Archivo de ejemplo (3)\" meta [IsParameterQuery=true, BinaryIdentifier=#\"Archivo de ejemplo (3)\", Type=\"Binary\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "bb014aa7-212a-45cc-9595-2e4ec3d12f69",
+        "queryGroup": "Transformar archivo de Produccion Ferro\\Consultas auxiliares"
+      },
+      {
+        "name": "Archivo de ejemplo (3)",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Binary"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = Folder.Files(\"Z:\\PRODUCCION BI\\Produccion Ferro\"),",
+          "    Navegación1 = Origen{0}[Content]",
+          "in",
+          "    Navegación1"
+        ],
+        "kind": "m",
+        "lineageTag": "0bf30c4e-5f72-44ab-a100-d2405f1b5ab1",
+        "queryGroup": "Transformar archivo de Produccion Ferro\\Consultas auxiliares"
+      },
+      {
+        "name": "Transformar archivo (3)",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = (Parámetro3 as binary) => let",
+          "    Origen = Excel.Workbook(Parámetro3, null, true),",
+          "    Datos1 = Origen{[Name=\"Datos\"]}[Data]",
+          "in",
+          "    Datos1",
+          "in",
+          "    Origen"
+        ],
+        "kind": "m",
+        "lineageTag": "80313bf7-f864-4c84-ad44-db27f8a3d6be",
+        "queryGroup": "Transformar archivo de Produccion Ferro\\Consultas auxiliares"
+      },
+      {
+        "name": "Produccion TYPIMA",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = Folder.Files(\"Z:\\PRODUCCION BI\\Produccion TYPIMA\"),",
+          "    #\"Archivos ocultos filtrados1\" = Table.SelectRows(Origen, each [Attributes]?[Hidden]? <> true),",
+          "    #\"Invocar función personalizada1\" = Table.AddColumn(#\"Archivos ocultos filtrados1\", \"Transformar archivo (4)\", each #\"Transformar archivo (4)\"([Content])),",
+          "    #\"Columnas con nombre cambiado1\" = Table.RenameColumns(#\"Invocar función personalizada1\", {\"Name\", \"Source.Name\"}),",
+          "    #\"Otras columnas quitadas1\" = Table.SelectColumns(#\"Columnas con nombre cambiado1\", {\"Source.Name\", \"Transformar archivo (4)\"}),",
+          "    #\"Columna de tabla expandida1\" = Table.ExpandTableColumn(#\"Otras columnas quitadas1\", \"Transformar archivo (4)\", Table.ColumnNames(#\"Transformar archivo (4)\"(#\"Archivo de ejemplo (4)\"))),",
+          "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Columna de tabla expandida1\",{{\"Source.Name\", type text}, {\"Column1\", type text}, {\"Column2\", type text}, {\"Column3\", type text}, {\"Column4\", type text}, {\"Column5\", type text}, {\"Column6\", type text}, {\"Column7\", type text}, {\"Column8\", type text}, {\"Column9\", type text}, {\"Column10\", type text}, {\"Column11\", type text}, {\"Column12\", type text}}),",
+          "    #\"Filas filtradas\" = Table.SelectRows(#\"Tipo cambiado\", each [Column2] <> null and [Column2] <> \"01/190\" and [Column2] <> \"01/199\" and [Column2] <> \"01/290\" and [Column2] <> \"01/301\" and [Column2] <> \"01/302\" and [Column2] <> \"01/321\" and [Column2] <> \"01/401\" and [Column2] <> \"01/402\" and [Column2] <> \"01/501\" and [Column2] <> \"01/502\" and [Column2] <> \"01/503\" and [Column2] <> \"01/601\" and [Column2] <> \"07/190\" and [Column2] <> \"07/199\" and [Column2] <> \"07/290\" and [Column2] <> \"07/301\" and [Column2] <> \"07/302\" and [Column2] <> \"07/321\" and [Column2] <> \"07/401\" and [Column2] <> \"07/402\" and [Column2] <> \"07/501\" and [Column2] <> \"07/502\" and [Column2] <> \"07/503\" and [Column2] <> \"CÓDIGO MÁQUINA\" and [Column2] <> \"MES: 1\" and [Column2] <> \"MES: 10\" and [Column2] <> \"MES: 11\" and [Column2] <> \"MES: 12\" and [Column2] <> \"MES: 2\" and [Column2] <> \"MES: 3\" and [Column2] <> \"MES: 4\" and [Column2] <> \"MES: 5\" and [Column2] <> \"MES: 6\" and [Column2] <> \"MES: 7\" and [Column2] <> \"MES: 8\" and [Column2] <> \"MES: 9\"),",
+          "    #\"Valor reemplazado\" = Table.ReplaceValue(#\"Filas filtradas\",\".xls\",\"\",Replacer.ReplaceText,{\"Source.Name\"}),",
+          "    #\"Texto en mayúsculas\" = Table.TransformColumns(#\"Valor reemplazado\",{{\"Source.Name\", Text.Upper, type text}}),",
+          "    #\"Dividir columna por delimitador\" = Table.SplitColumn(#\"Texto en mayúsculas\", \"Source.Name\", Splitter.SplitTextByDelimiter(\"-\", QuoteStyle.Csv), {\"Source.Name.1\", \"Source.Name.2\", \"Source.Name.3\", \"Source.Name.4\"}),",
+          "    #\"Tipo cambiado1\" = Table.TransformColumnTypes(#\"Dividir columna por delimitador\",{{\"Source.Name.1\", type text}, {\"Source.Name.2\", type text}, {\"Source.Name.3\", type text}, {\"Source.Name.4\", Int64.Type}}),",
+          "    #\"Columnas con nombre cambiado\" = Table.RenameColumns(#\"Tipo cambiado1\",{{\"Source.Name.1\", \"EMPRESA\"}, {\"Source.Name.2\", \"PLANTA\"}, {\"Source.Name.3\", \"MES\"}, {\"Source.Name.4\", \"AÑO\"}, {\"Column2\", \"CODIGO\"}, {\"Column3\", \"PRODUCCION_TN\"}}),",
+          "    #\"Otras columnas quitadas\" = Table.SelectColumns(#\"Columnas con nombre cambiado\",{\"EMPRESA\", \"PLANTA\", \"MES\", \"AÑO\", \"CODIGO\", \"PRODUCCION_TN\"}),",
+          "    #\"Tipo cambiado2\" = Table.TransformColumnTypes(#\"Otras columnas quitadas\",{{\"EMPRESA\", type text}, {\"PRODUCCION_TN\", type number}}),",
+          "    #\"Columna condicional agregada\" = Table.AddColumn(#\"Tipo cambiado2\", \"NUM_MES\", each if [MES] = \"ENERO\" then 1 else if [MES] = \"FEBRERO\" then 2 else if [MES] = \"MARZO\" then 3 else if [MES] = \"ABRIL\" then 4 else if [MES] = \"MAYO\" then 5 else if [MES] = \"JUNIO\" then 6 else if [MES] = \"JULIO\" then 7 else if [MES] = \"AGOSTO\" then 8 else if [MES] = \"SEPTIEMBRE\" then 9 else if [MES] = \"OCTUBRE\" then 10 else if [MES] = \"NOVIEMBRE\" then 11 else if [MES] = \"DICIEMBRE\" then 12 else null),",
+          "    #\"Personalizada agregada\" = Table.AddColumn(#\"Columna condicional agregada\", \"DIA\", each 1),",
+          "    #\"Tipo cambiado3\" = Table.TransformColumnTypes(#\"Personalizada agregada\",{{\"NUM_MES\", Int64.Type}, {\"DIA\", Int64.Type}}),",
+          "    #\"Columnas combinadas\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Tipo cambiado3\", {{\"DIA\", type text}, {\"NUM_MES\", type text}, {\"AÑO\", type text}}, \"es-ES\"),{\"DIA\", \"NUM_MES\", \"AÑO\"},Combiner.CombineTextByDelimiter(\"/\", QuoteStyle.None),\"FECHA\"),",
+          "    #\"Tipo cambiado4\" = Table.TransformColumnTypes(#\"Columnas combinadas\",{{\"FECHA\", type date}}),",
+          "    #\"Otras columnas quitadas2\" = Table.SelectColumns(#\"Tipo cambiado4\",{\"FECHA\", \"CODIGO\", \"PRODUCCION_TN\"})",
+          "in",
+          "    #\"Otras columnas quitadas2\""
+        ],
+        "kind": "m",
+        "lineageTag": "e6bc807f-8df1-4918-b010-188f52b47ccc",
+        "queryGroup": "Produccion"
+      },
+      {
+        "name": "Parámetro4",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Binary"
+          }
+        ],
+        "expression": "#\"Archivo de ejemplo (4)\" meta [IsParameterQuery=true, BinaryIdentifier=#\"Archivo de ejemplo (4)\", Type=\"Binary\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "8da55eb2-f031-4bc3-bbaa-8dd25a278fd8",
+        "queryGroup": "Transformar archivo de Produccion Ferro\\Transformar archivo de Produccion TYPIMA\\Consultas auxiliares"
+      },
+      {
+        "name": "Archivo de ejemplo (4)",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Binary"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = Folder.Files(\"Z:\\PRODUCCION BI\\Produccion TYPIMA\"),",
+          "    Navegación1 = Origen{0}[Content]",
+          "in",
+          "    Navegación1"
+        ],
+        "kind": "m",
+        "lineageTag": "f242fad5-2268-43a8-886e-690b5d22c9ea",
+        "queryGroup": "Transformar archivo de Produccion Ferro\\Transformar archivo de Produccion TYPIMA\\Consultas auxiliares"
+      },
+      {
+        "name": "Transformar archivo (4)",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = (Parámetro4 as binary) => let",
+          "    Origen = Excel.Workbook(Parámetro4, null, true),",
+          "    Datos1 = Origen{[Name=\"Datos\"]}[Data]",
+          "in",
+          "    Datos1",
+          "in",
+          "    Origen"
+        ],
+        "kind": "m",
+        "lineageTag": "9a74d54d-aabb-4001-b08c-96d4fd868af9",
+        "queryGroup": "Transformar archivo de Produccion Ferro\\Transformar archivo de Produccion TYPIMA\\Consultas auxiliares"
+      },
+      {
+        "name": "Parámetro5",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Binary"
+          }
+        ],
+        "expression": "#\"Archivo de ejemplo (5)\" meta [IsParameterQuery=true, BinaryIdentifier=#\"Archivo de ejemplo (5)\", Type=\"Binary\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "fb9451d3-62a7-4a6d-8cba-f58f7c73f630",
+        "queryGroup": "Transformar archivo de Produccion Ferro\\Transformar archivo de Produccion TYPIMA\\Transformar archivo de Produccion Tepsa\\Consultas auxiliares"
+      },
+      {
+        "name": "Archivo de ejemplo (5)",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Binary"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = Folder.Files(\"Z:\\PRODUCCION BI\\Produccion Tepsa\"),",
+          "    Navegación1 = Origen{0}[Content]",
+          "in",
+          "    Navegación1"
+        ],
+        "kind": "m",
+        "lineageTag": "46a60d78-e54f-402e-bb36-3bc5ed51a026",
+        "queryGroup": "Transformar archivo de Produccion Ferro\\Transformar archivo de Produccion TYPIMA\\Transformar archivo de Produccion Tepsa\\Consultas auxiliares"
+      },
+      {
+        "name": "Transformar archivo (5)",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = (Parámetro5 as binary) => let",
+          "    Origen = Excel.Workbook(Parámetro5, null, true),",
+          "    Sheet2 = Origen{[Name=\"Sheet1\"]}[Data],",
+          "    #\"Encabezados promovidos\" = Table.PromoteHeaders(Sheet2, [PromoteAllScalars=true])",
+          "in",
+          "    #\"Encabezados promovidos\"",
+          "in",
+          "    Origen"
+        ],
+        "kind": "m",
+        "lineageTag": "3ad03c9f-f7d4-4939-a7a9-e3d0c9471c98",
+        "queryGroup": "Transformar archivo de Produccion Ferro\\Transformar archivo de Produccion TYPIMA\\Transformar archivo de Produccion Tepsa\\Consultas auxiliares"
+      },
+      {
+        "name": "Dim_Clasificacion_Tepsa",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Origen = Excel.Workbook(File.Contents(\"Z:\\PRODUCCION BI\\Clasificacion Tepsa.xlsx\"), null, true),",
+          "    Datos_Sheet = Origen{[Item=\"Datos\",Kind=\"Sheet\"]}[Data],",
+          "    #\"Columnas con nombre cambiado\" = Table.RenameColumns(Datos_Sheet,{{\"Column1\", \"CODIGO_ARTICULO\"}, {\"Column2\", \"DESCRIPCION_ARTICULO\"}, {\"Column3\", \"NIVEL\"}, {\"Column4\", \"DESCRIPCION_NIVEL\"}}),",
+          "    #\"Filas filtradas\" = Table.SelectRows(#\"Columnas con nombre cambiado\", each ([NIVEL] <> null and [NIVEL] <> \"09\" and [NIVEL] <> \"123\" and [NIVEL] <> \"Código Estadístico 7\")),",
+          "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Filas filtradas\",{{\"NIVEL\", Int64.Type}, {\"DESCRIPCION_ARTICULO\", type text}, {\"CODIGO_ARTICULO\", type text}, {\"DESCRIPCION_NIVEL\", type text}}),",
+          "    #\"Duplicados quitados\" = Table.Distinct(#\"Tipo cambiado\", {\"CODIGO_ARTICULO\"})",
+          "in",
+          "    #\"Duplicados quitados\""
+        ],
+        "kind": "m",
+        "lineageTag": "bf57f317-2bc8-484f-9bfc-864c678f2e46",
+        "queryGroup": "Tabla de Dimensiones"
+      },
+      {
+        "name": "Diagnostics_Aggregated_2024-05-31_13:32",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Json.Document(File.Contents(\"C:\\Users\\a.abasolo\\AppData\\Local\\Microsoft\\Power BI Desktop\\Traces\\Diagnostics\\Diagnostics_Aggregated_20240531T133256.600-05d83890-3848-4266-9694-617202129e13.json\")),",
+          "    #\"Converted to Table\" = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
+          "    #\"Expanded Column1\" = Table.ExpandRecordColumn(#\"Converted to Table\", \"Column1\",",
+          "        {\"Id\", \"Query\", \"Step\", \"Category\", \"DataSourceKind\", \"Operation\", \"StartTime\", \"EndTime\", \"ExclusiveDurationPct\", \"ExclusiveDuration\", \"Resource\", \"DataSourceQuery\", \"AdditionalInfo\", \"RowCount\", \"ContentLength\", \"IsUserQuery\", \"Path\", \"GroupId\", \"PartitionKey\"},",
+          "        {\"Id\", \"Query\", \"Step\", \"Category\", \"Data Source Kind\", \"Operation\", \"Start Time\", \"End Time\", \"Exclusive Duration (%)\", \"Exclusive Duration\", \"Resource\", \"Data Source Query\", \"Additional Info\", \"Row Count\", \"Content Length\", \"Is User Query\", \"Path\", \"Group Id\", \"Partition Key\"}),",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Expanded Column1\", ",
+          "        {{\"Id\", type text}, {\"Query\", type text}, {\"Step\", type text}, {\"Category\", type text}, {\"Data Source Kind\", type text}, {\"Operation\", type text}, {\"Start Time\", type datetime}, {\"End Time\", type datetime}, {\"Exclusive Duration (%)\", Percentage.Type}, {\"Exclusive Duration\", type duration}, {\"Resource\", type text}, {\"Data Source Query\", type text}, {\"Additional Info\", type any}, {\"Row Count\", Int64.Type}, {\"Content Length\", Int64.Type}, {\"Is User Query\", type logical}, {\"Path\", type text}, {\"Group Id\", type number}, {\"Partition Key\", type text}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "ee63cfdf-176b-464f-a0ef-3df52ff1702c",
+        "queryGroup": "Diagnóstico"
+      },
+      {
+        "name": "Consulta1",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ],
+        "expression": [
+          "// Desarrollado por: Miguel Caballero & Fabian Torres: https://www.excelfreeblog.com/",
+          "let",
+          "    Funcion =",
+          "    ( ResultadoAgregado as table) as any => ",
+          "    let",
+          "        ColumnaDuracionALista =",
+          "        ResultadoAgregado[Exclusive Duration],",
+          "",
+          "        Suma = ",
+          "        List.Sum ( ColumnaDuracionALista ),",
+          "",
+          "        RegistroConDetalles = ",
+          "        Duration.ToRecord( Suma )",
+          "",
+          "    in",
+          "        RegistroConDetalles,",
+          "",
+          "    Documentacion =",
+          "    type function ",
+          "    ( ",
+          "        ResultadoAgregado as table",
+          "    ) as list meta",
+          "    ",
+          "    [",
+          "        Documentation.Name = ",
+          "        \"Record.QueryExecutionFromDiagnostice\",",
+          "",
+          "        Documentation.LongDescription = ",
+          "        \"Devuelve el tiempo que tarda en ejecutarse una consulta",
+          "         según el resultado agregado del diagnósitico de consulta.",
+          "",
+          "        Creado por: | EXCELFREEBLOG.COM | para POWERQUERY.ZONE\",",
+          "",
+          "        Documentation.Examples = ",
+          "        {",
+          "            [",
+          "                Description = ",
+          "                \"\" ,",
+          "",
+          "                Code = ",
+          "                \"\",",
+          "",
+          "                Result = ",
+          "                \"\" ",
+          "            ]            ",
+          "        },",
+          "        Documentation.Category = ",
+          "        \"Record\",",
+          "",
+          "        Documentation.Source = ",
+          "        \"Local\",",
+          "",
+          "        Documentation.Author = ",
+          "        \"Miguel Caballero & Fabian Torres de: www.ExcelFreeBlog.Com\"     ",
+          "    ]",
+          "",
+          "in",
+          "    Value.ReplaceType (",
+          "        Funcion, ",
+          "        Documentacion ",
+          "    )"
+        ],
+        "kind": "m",
+        "lineageTag": "5e4585b2-5b70-491b-b173-5c62f3031ad4",
+        "queryGroup": "Diagnóstico"
+      }
+    ],
+    "queryGroups": [
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "Transformar archivo de Produccion Braseli"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "Transformar archivo de Produccion Braseli\\Consultas auxiliares"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "1"
+          }
+        ],
+        "folder": "Transformar archivo de Produccion F Maroc"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "Transformar archivo de Produccion F Maroc\\Consultas auxiliares"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "2"
+          }
+        ],
+        "folder": "Transformar archivo de Produccion Ferro"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "Transformar archivo de Produccion Ferro\\Consultas auxiliares"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "5"
+          }
+        ],
+        "folder": "Tabla de Hechos"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "3"
+          }
+        ],
+        "folder": "Produccion"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "6"
+          }
+        ],
+        "folder": "Tabla de Dimensiones"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "1"
+          }
+        ],
+        "folder": "Transformar archivo de Produccion Ferro\\Transformar archivo de Produccion TYPIMA"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "Transformar archivo de Produccion Ferro\\Transformar archivo de Produccion TYPIMA\\Consultas auxiliares"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "1"
+          }
+        ],
+        "folder": "Transformar archivo de Produccion Ferro\\Transformar archivo de Produccion TYPIMA\\Transformar archivo de Produccion Tepsa"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "Transformar archivo de Produccion Ferro\\Transformar archivo de Produccion TYPIMA\\Transformar archivo de Produccion Tepsa\\Consultas auxiliares"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "13"
+          }
+        ],
+        "description": "Grupo de consultas para el diagnóstico",
+        "folder": "Diagnóstico"
+      }
+    ],
+    "relationships": [
+      {
+        "name": "e10edd43-c33f-4ec5-8f53-904b1885cb0e",
+        "fromColumn": "FECHA",
+        "fromTable": "Fact_ProduccionTepsa",
+        "toColumn": "FECHA",
+        "toTable": "DimCalendario"
+      },
+      {
+        "name": "7e9e6a96-d2cb-4ec5-a0c1-9b3d02b515ba",
+        "fromColumn": "FECHA",
+        "fromTable": "Fact_ProduccionGPFyFMAROC",
+        "toColumn": "FECHA",
+        "toTable": "DimCalendario"
+      },
+      {
+        "name": "8dd8c5a9-bdfc-4175-971c-da7352849c45",
+        "fromColumn": "ID_Subseccion",
+        "fromTable": "Dim_Lineas",
+        "toColumn": "ID_Subseccion",
+        "toTable": "Dim_ID_Subseccion"
+      },
+      {
+        "name": "a355d81e-2696-488c-92eb-77237aec305d",
+        "fromColumn": "ID_Seccion",
+        "fromTable": "Dim_ID_Subseccion",
+        "toColumn": "ID_Seccion",
+        "toTable": "Dim_ID_Seccion"
+      },
+      {
+        "name": "4138f3db-d3e5-4b6d-b3c1-c52a767ca545",
+        "fromColumn": "ID_Planta",
+        "fromTable": "Dim_ID_Seccion",
+        "toColumn": "ID_Planta",
+        "toTable": "Dim_ID_Planta"
+      },
+      {
+        "name": "25fa79f2-efe0-4923-8463-8d17b7b864a8",
+        "fromColumn": "ID_Empresa",
+        "fromTable": "Dim_ID_Planta",
+        "toColumn": "ID_Empresa",
+        "toTable": "Dim_ID_Empresa"
+      },
+      {
+        "name": "c04f56c0-7a0b-4bb1-908f-720479f87e2c",
+        "fromColumn": "CODIGO",
+        "fromTable": "Fact_ProduccionGPFyFMAROC",
+        "toColumn": "LINEA",
+        "toTable": "Dim_Lineas"
+      }
+    ],
+    "roles": [
+      {
+        "name": "TYPIMAPEX",
+        "annotations": [
+          {
+            "name": "PBI_Id",
+            "value": "0d36b057b9e947ec94ee048f49580b21"
+          }
+        ],
+        "modelPermission": "read",
+        "tablePermissions": [
+          {
+            "name": "Dim_ID_Empresa",
+            "filterExpression": "[EMPRESA] == \"TYPIMA\""
+          },
+          {
+            "name": "Fact_ProduccionTepsa",
+            "filterExpression": "[DESCRIPCION_NIVEL] == Blank()"
+          }
+        ]
+      },
+      {
+        "name": "DIRECCION",
+        "annotations": [
+          {
+            "name": "PBI_Id",
+            "value": "cb6c251883e04dd0b65177047ce02284"
+          }
+        ],
+        "modelPermission": "read"
+      }
+    ],
+    "sourceQueryCulture": "es-ES",
+    "tables": [
+      {
+        "name": "1-Medidas",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          }
+        ],
+        "lineageTag": "c6be4cdf-f812-4439-a0ba-0548b3701ab0",
+        "measures": [
+          {
+            "name": "PRODUCCION_GPFyFMAROC_TN",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "displayFolder": "MENSUALES",
+            "expression": "SUM(Fact_ProduccionGPFyFMAROC[PRODUCCION_TN])",
+            "formatString": "#,0",
+            "lineageTag": "177fcebf-a79e-41dd-9498-cbd36b77d285"
+          },
+          {
+            "name": "PRODUCCION_GPFyFMAROC_TN_AA",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "displayFolder": "MENSUALES",
+            "expression": "CALCULATE([PRODUCCION_GPFyFMAROC_TN], DATEADD(DimCalendario[FECHA],-1,YEAR))",
+            "formatString": "#,0",
+            "lineageTag": "4860969d-e945-476f-a97d-704c56fd0a55"
+          },
+          {
+            "name": "DESV_PRODUCCION_GPFyFMAROC_TN",
+            "displayFolder": "DESVIACIONES",
+            "expression": "DIVIDE([PRODUCCION_GPFyFMAROC_TN] - [PRODUCCION_GPFyFMAROC_TN_AA], [PRODUCCION_GPFyFMAROC_TN_AA])",
+            "formatString": "#,0\\ %;-#,0\\ %;#,0\\ %",
+            "lineageTag": "0e9b7c96-525c-4133-85d5-8a3558debc28"
+          },
+          {
+            "name": "PRODUCCION_TEPSA_TN",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "displayFolder": "MENSUALES",
+            "expression": "SUM(Fact_ProduccionTepsa[PRODUCCION_KGS]) / 1000",
+            "formatString": "#,0",
+            "lineageTag": "95fbefc0-5131-4c36-ac30-4d7cf736ede8"
+          },
+          {
+            "name": "PRODUCCION_TEPSA_TN_AA",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "displayFolder": "MENSUALES",
+            "expression": "CALCULATE([PRODUCCION_TEPSA_TN], DATEADD(DimCalendario[FECHA],-1,YEAR))",
+            "formatString": "#,0",
+            "lineageTag": "f2cae055-d511-46fd-ad90-5b8fd58f5c1e"
+          },
+          {
+            "name": "DESV_PRODUCCION_TEPSA_TN",
+            "displayFolder": "DESVIACIONES",
+            "expression": "DIVIDE([PRODUCCION_TEPSA_TN] - [PRODUCCION_TEPSA_TN_AA], [PRODUCCION_TEPSA_TN_AA])",
+            "formatString": "0\\ %;-0\\ %;0\\ %",
+            "lineageTag": "91a8c950-1c8d-4a98-8d56-f62352100372"
+          },
+          {
+            "name": "ACUMULADO_PRODUCCION_GPFyFMAROC_TN_AA",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "displayFolder": "ACUMULADOS",
+            "expression": "CALCULATE([ACUMULADO_PRODUCCION_GPFyFMAROC_TN], DATEADD(DimCalendario[FECHA],-1,YEAR))",
+            "formatString": "#,0",
+            "lineageTag": "c9a368d6-1eb4-4ff9-bc4f-8fca8cc3372f"
+          },
+          {
+            "name": "DESV_ACUMULADO_PRODUCCION_GPFyFMAROC_TN",
+            "displayFolder": "DESVIACIONES",
+            "expression": "DIVIDE([ACUMULADO_PRODUCCION_GPFyFMAROC_TN] - [ACUMULADO_PRODUCCION_GPFyFMAROC_TN_AA], [ACUMULADO_PRODUCCION_GPFyFMAROC_TN_AA])",
+            "formatString": "0\\ %;-0\\ %;0\\ %",
+            "lineageTag": "7f84c5d3-acfc-4a6b-a69e-bcfcb012eb56"
+          },
+          {
+            "name": "ACUMULADO_PRODUCCION_GPFyFMAROC_TN",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "displayFolder": "ACUMULADOS",
+            "expression": [
+              "",
+              "CALCULATE([PRODUCCION_GPFyFMAROC_TN], DATESYTD(DimCalendario[FECHA]))"
+            ],
+            "formatString": "#,0",
+            "lineageTag": "4cf7301a-7b14-4949-adbe-03bacff5401c"
+          },
+          {
+            "name": "ACUMULADO_PRODUCCION_TEPSA_TN",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "displayFolder": "ACUMULADOS",
+            "expression": [
+              "",
+              "CALCULATE([PRODUCCION_TEPSA_TN], DATESYTD(DimCalendario[FECHA]))"
+            ],
+            "formatString": "#,0",
+            "lineageTag": "bb1d2b3f-303d-434c-a781-8cbfb3ee0aea"
+          },
+          {
+            "name": "ACUMULADO_PRODUCCION_TEPSA_TN_AA",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "displayFolder": "ACUMULADOS",
+            "expression": "CALCULATE([ACUMULADO_PRODUCCION_TEPSA_TN], DATEADD(DimCalendario[FECHA],-1,YEAR))",
+            "formatString": "#,0",
+            "lineageTag": "4096962a-8dc2-4f61-8a17-3b27d0faa67a"
+          },
+          {
+            "name": "DESV_ACUMULADO_PRODUCCION_TEPSA_TN",
+            "displayFolder": "DESVIACIONES",
+            "expression": "DIVIDE([ACUMULADO_PRODUCCION_TEPSA_TN] - [ACUMULADO_PRODUCCION_TEPSA_TN_AA], [ACUMULADO_PRODUCCION_TEPSA_TN_AA])",
+            "formatString": "0\\ %;-0\\ %;0\\ %",
+            "lineageTag": "75a39655-8d01-40de-8eb4-a68d711f5f61"
+          },
+          {
+            "name": "PRODUCCION_GPFyFMAROC_TN_LTM",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDecimal\":true}"
+              }
+            ],
+            "expression": [
+              "",
+              "",
+              "CALCULATE(",
+              "    [PRODUCCION_GPFyFMAROC_TN],",
+              "    DATESINPERIOD(",
+              "        DimCalendario[FECHA],",
+              "        MAX(DimCalendario[FECHA]),",
+              "        -12,",
+              "        MONTH",
+              "    )",
+              ")"
+            ],
+            "formatString": "#,0",
+            "lineageTag": "46cbb4d7-452d-4c0f-b9c3-7ba0fd71de9b"
+          },
+          {
+            "name": "PRODUCCION_TEPSA_UND",
+            "displayFolder": "MENSUALES",
+            "expression": "SUM(Fact_ProduccionTepsa[PRODUCCION_UND])",
+            "formatString": "#,0",
+            "lineageTag": "87151d16-38cf-4417-8f30-e31ac3195fdf"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "1-Medidas",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i44FAA==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Columna1 = _t]),",
+                "    #\"Tipo cambiado\" = Table.TransformColumnTypes(Origen,{{\"Columna1\", type text}}),",
+                "    #\"Columnas quitadas\" = Table.RemoveColumns(#\"Tipo cambiado\",{\"Columna1\"})",
+                "in",
+                "    #\"Columnas quitadas\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "DimCalendario",
+        "annotations": [
+          {
+            "name": "PBI_Id",
+            "value": "b78a3d8d8d1342eabdfff1a54c9f1e7a"
+          }
+        ],
+        "columns": [
+          {
+            "name": "FECHA",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "isDataTypeInferred": true,
+            "isNameInferred": false,
+            "lineageTag": "cdb32b60-34fc-4013-bb10-2daa71689b72",
+            "sourceColumn": "[Date]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "AÑO",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "expression": "year(DimCalendario[FECHA])",
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "lineageTag": "c50676db-68ee-49f6-a26b-3ffce56c74fa",
+            "summarizeBy": "sum",
+            "type": "calculated"
+          },
+          {
+            "name": "Mes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "expression": "FORMAT(DimCalendario[FECHA], \"mmm\")",
+            "isDataTypeInferred": true,
+            "lineageTag": "8216aa2f-df5a-4a83-97bf-d966d77825bb",
+            "sortByColumn": "Num_Mes",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Num_Mes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "expression": "MONTH(DimCalendario[FECHA])",
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "lineageTag": "30feb9ad-cca7-4ad8-8ded-c85205ad3089",
+            "summarizeBy": "sum",
+            "type": "calculated"
+          },
+          {
+            "name": "Año_Mes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "expression": "FORMAT(DimCalendario[FECHA], \"yy-mm\")",
+            "isDataTypeInferred": true,
+            "lineageTag": "76cdf22e-ce38-4320-90f2-225d66da54f8",
+            "sortByColumn": "Num_Mes",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Mes actual",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "expression": [
+              "var MaxDate = max(Fact_ProduccionGPFyFMAROC[FECHA])",
+              "return",
+              "DATEDIFF(DimCalendario[FECHA], MaxDate, MONTH)"
+            ],
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "lineageTag": "7f160704-039a-4f7d-a373-2ea752886587",
+            "summarizeBy": "sum",
+            "type": "calculated"
+          }
+        ],
+        "lineageTag": "e3005af5-6a94-4e8c-9d2a-b5c25b41d45f",
+        "partitions": [
+          {
+            "name": "DimCalendario",
+            "mode": "import",
+            "source": {
+              "expression": "CALENDAR(DATE(YEAR(MIN(Fact_ProduccionGPFyFMAROC[FECHA])),1,1),DATE(YEAR(MAX(Fact_ProduccionGPFyFMAROC[FECHA])),12,31))",
+              "type": "calculated"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Fact_ProduccionTepsa",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Exception"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          }
+        ],
+        "columns": [
+          {
+            "name": "FECHA",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "b3f157a4-2182-451b-aec7-3fa157eb88e2",
+            "sourceColumn": "FECHA",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ARTICULO",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "5c431f47-9a11-4186-9cbb-d56cdca9cb21",
+            "sourceColumn": "ARTICULO",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "PRODUCCION_UND",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "22ce7345-ec69-46fc-a326-e92fd662dbba",
+            "sourceColumn": "PRODUCCION_UND",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "PRODUCCION_KGS",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "2e548658-323f-4f7a-8e73-191f0d05fdd1",
+            "sourceColumn": "PRODUCCION_KGS",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "DESCRIPCION_NIVEL",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "8b7731c5-cc9e-4a2d-9d3f-c6e4c320128c",
+            "sourceColumn": "DESCRIPCION_NIVEL",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "baa19304-db21-4206-b5f0-2a01d64fa671",
+        "partitions": [
+          {
+            "name": "Fact_ProduccionTepsa",
+            "mode": "import",
+            "queryGroup": "Tabla de Hechos",
+            "source": {
+              "expression": [
+                "let",
+                "    Origen = Folder.Files(\"Z:\\PRODUCCION BI\\Produccion Tepsa\"),",
+                "    #\"Archivos ocultos filtrados1\" = Table.SelectRows(Origen, each [Attributes]?[Hidden]? <> true),",
+                "    #\"Invocar función personalizada1\" = Table.AddColumn(#\"Archivos ocultos filtrados1\", \"Transformar archivo (5)\", each #\"Transformar archivo (5)\"([Content])),",
+                "    #\"Columnas con nombre cambiado1\" = Table.RenameColumns(#\"Invocar función personalizada1\", {\"Name\", \"Source.Name\"}),",
+                "    #\"Otras columnas quitadas1\" = Table.SelectColumns(#\"Columnas con nombre cambiado1\", {\"Source.Name\", \"Transformar archivo (5)\"}),",
+                "    #\"Columna de tabla expandida1\" = Table.ExpandTableColumn(#\"Otras columnas quitadas1\", \"Transformar archivo (5)\", Table.ColumnNames(#\"Transformar archivo (5)\"(#\"Archivo de ejemplo (5)\"))),",
+                "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Columna de tabla expandida1\",{{\"Source.Name\", type text}, {\"Column1\", type text}, {\"Column2\", type text}, {\"TEPSA\", type text}, {\"Column4\", type text}, {\"Column5\", type text}, {\"Column6\", type text}, {\"Column7\", Int64.Type}}),",
+                "    #\"Filas filtradas\" = Table.SelectRows(#\"Tipo cambiado\", each ([Column1] <> null and [Column1] <> \"ARTÍCULO\" and [Column1] <> \"FAMILIA\" and [Column1] <> \"Filtro: Desde Fecha: 01/01/2023. Hasta fecha: 31/01/2023. Desde movimiento: E_P. Hasta movimiento: E_P.\" and [Column1] <> \"Filtro: Desde Fecha: 01/02/2023. Hasta fecha: 28/02/2023. Desde movimiento: E_P. Hasta movimiento: E_P.\" and [Column1] <> \"Listado de Movimientos de Almacén Resumen\")),",
+                "    #\"Valor reemplazado\" = Table.ReplaceValue(#\"Filas filtradas\",\".xls\",\"\",Replacer.ReplaceText,{\"Source.Name\"}),",
+                "    #\"Texto en mayúsculas\" = Table.TransformColumns(#\"Valor reemplazado\",{{\"Source.Name\", Text.Upper, type text}}),",
+                "    #\"Dividir columna por delimitador\" = Table.SplitColumn(#\"Texto en mayúsculas\", \"Source.Name\", Splitter.SplitTextByDelimiter(\"-\", QuoteStyle.Csv), {\"Source.Name.1\", \"Source.Name.2\", \"Source.Name.3\", \"Source.Name.4\"}),",
+                "    #\"Tipo cambiado1\" = Table.TransformColumnTypes(#\"Dividir columna por delimitador\",{{\"Source.Name.1\", type text}, {\"Source.Name.2\", type text}, {\"Source.Name.3\", type text}, {\"Source.Name.4\", Int64.Type}}),",
+                "    #\"Columnas con nombre cambiado\" = Table.RenameColumns(#\"Tipo cambiado1\",{{\"Source.Name.1\", \"EMPRESA\"}, {\"Source.Name.2\", \"PLANTA\"}, {\"Source.Name.3\", \"MES\"}, {\"Source.Name.4\", \"AÑO\"}, {\"Column1\", \"CODIGO\"}, {\"TEPSA\", \"PRODUCCION_UND\"}, {\"Column4\", \"PRODUCCION_KGS\"}}),",
+                "    #\"Otras columnas quitadas\" = Table.SelectColumns(#\"Columnas con nombre cambiado\",{\"MES\", \"AÑO\", \"CODIGO\", \"PRODUCCION_UND\", \"PRODUCCION_KGS\"}),",
+                "    #\"Tipo cambiado2\" = Table.TransformColumnTypes(#\"Otras columnas quitadas\",{{\"PRODUCCION_UND\", Int64.Type}, {\"PRODUCCION_KGS\", type number}}),",
+                "    #\"Columna condicional agregada\" = Table.AddColumn(#\"Tipo cambiado2\", \"NUN_MES\", each if [MES] = \"ENERO\" then 1 else if [MES] = \"FEBRERO\" then 2 else if [MES] = \"MARZO\" then 3 else if [MES] = \"ABRIL\" then 4 else if [MES] = \"MAYO\" then 5 else if [MES] = \"JUNIO\" then 6 else if [MES] = \"JULIO\" then 7 else if [MES] = \"AGOSTO\" then 8 else if [MES] = \"SEPTIEMBRE\" then 9 else if [MES] = \"OCTUBRE\" then 10 else if [MES] = \"NOVIEMBRE\" then 11 else if [MES] = \"DICIEMBRE\" then 12 else null),",
+                "    #\"Personalizada agregada\" = Table.AddColumn(#\"Columna condicional agregada\", \"DIA\", each 1),",
+                "    #\"Tipo cambiado3\" = Table.TransformColumnTypes(#\"Personalizada agregada\",{{\"NUN_MES\", Int64.Type}, {\"DIA\", Int64.Type}}),",
+                "    #\"Columnas combinadas\" = Table.CombineColumns(Table.TransformColumnTypes(#\"Tipo cambiado3\", {{\"DIA\", type text}, {\"NUN_MES\", type text}, {\"AÑO\", type text}}, \"es-ES\"),{\"DIA\", \"NUN_MES\", \"AÑO\"},Combiner.CombineTextByDelimiter(\"/\", QuoteStyle.None),\"FECHA\"),",
+                "    #\"Tipo cambiado4\" = Table.TransformColumnTypes(#\"Columnas combinadas\",{{\"FECHA\", type date}}),",
+                "    #\"Columnas con nombre cambiado2\" = Table.RenameColumns(#\"Tipo cambiado4\",{{\"CODIGO\", \"ARTICULO\"}}),",
+                "    #\"Filas filtradas1\" = Table.SelectRows(#\"Columnas con nombre cambiado2\", each ([PRODUCCION_UND] <> null)),",
+                "    #\"Otras columnas quitadas2\" = Table.SelectColumns(#\"Filas filtradas1\",{\"FECHA\", \"ARTICULO\", \"PRODUCCION_UND\", \"PRODUCCION_KGS\"}),",
+                "    #\"Consultas combinadas\" = Table.NestedJoin(#\"Otras columnas quitadas2\", {\"ARTICULO\"}, Dim_Clasificacion_Tepsa, {\"CODIGO_ARTICULO\"}, \"Dim_Clasificacion_Tepsa\", JoinKind.LeftOuter),",
+                "    #\"Se expandió Dim_Clasificacion_Tepsa\" = Table.ExpandTableColumn(#\"Consultas combinadas\", \"Dim_Clasificacion_Tepsa\", {\"DESCRIPCION_NIVEL\"}, {\"Dim_Clasificacion_Tepsa.DESCRIPCION_NIVEL\"}),",
+                "    #\"Columnas con nombre cambiado3\" = Table.RenameColumns(#\"Se expandió Dim_Clasificacion_Tepsa\",{{\"Dim_Clasificacion_Tepsa.DESCRIPCION_NIVEL\", \"DESCRIPCION_NIVEL\"}})",
+                "in",
+                "    #\"Columnas con nombre cambiado3\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_Lineas",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          }
+        ],
+        "columns": [
+          {
+            "name": "LINEA",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "1ce7aba6-c068-4038-a0bd-26db50a62118",
+            "sourceColumn": "LINEA",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "DESCRIPCION",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "be65b2cb-1798-47cd-b5cb-3baea69a4f48",
+            "sourceColumn": "DESCRIPCION",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ID_Subseccion",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "1ab83cac-39d7-4b03-a71b-5f580db1083c",
+            "sourceColumn": "ID_Subseccion",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "SECCION",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "a09e289b-c388-439f-bf66-f8436efe4927",
+            "sourceColumn": "SECCION",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "4ec5286a-cb33-494b-a8e6-efaaf1d8a781",
+        "partitions": [
+          {
+            "name": "Dim_Lineas",
+            "mode": "import",
+            "queryGroup": "Tabla de Dimensiones",
+            "source": {
+              "expression": [
+                "let",
+                "    Origen = Excel.Workbook(File.Contents(\"Z:\\PRODUCCION BI\\Clasificacion GPF+F.MAROC.xlsx\"), null, true),",
+                "    DimLineas_Sheet = Origen{[Item=\"DimLineas\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Encabezados promovidos\" = Table.PromoteHeaders(DimLineas_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Encabezados promovidos\",{{\"LINEA\", type text}, {\"ID_Subseccion\", Int64.Type}, {\"DESCRIPCION\", type text}, {\"SECCION\", type text}})",
+                "in",
+                "    #\"Tipo cambiado\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Fact_ProduccionGPFyFMAROC",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          }
+        ],
+        "columns": [
+          {
+            "name": "CODIGO",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "53f73fd9-15b9-4ab7-9f1f-0d8e8b8f8bb9",
+            "sourceColumn": "CODIGO",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "FECHA",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "14a15fa9-dafc-44f1-a9b9-de53707c29c9",
+            "sourceColumn": "FECHA",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "PRODUCCION_TN",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "53e0b0db-9827-48b1-b1a4-a59224851250",
+            "sourceColumn": "PRODUCCION_TN",
+            "summarizeBy": "sum"
+          }
+        ],
+        "lineageTag": "29ae1e57-e2c1-4cc1-8381-1874d037be02",
+        "partitions": [
+          {
+            "name": "Fact_ProduccionGPFyFMAROC",
+            "mode": "import",
+            "queryGroup": "Tabla de Hechos",
+            "source": {
+              "expression": [
+                "let",
+                "    Origen = Table.Combine({#\"Produccion Ferro\", #\"Produccion Braseli\", #\"Produccion F Maroc\", #\"Produccion TYPIMA\"}),",
+                "    #\"Filas filtradas\" = Table.SelectRows(Origen, each true)",
+                "in",
+                "    #\"Filas filtradas\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_ID_Empresa",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          }
+        ],
+        "columns": [
+          {
+            "name": "EMPRESA",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "28082535-6f4b-4d9f-9e2d-64ee135af96d",
+            "sourceColumn": "EMPRESA",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Nombre_ID_Empresa",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "d38006d9-2fe4-481a-9520-58db60fe46b5",
+            "sourceColumn": "Nombre_ID_Empresa",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ID_Empresa",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "fe11062a-729a-4fcd-858d-d6c3f5c01679",
+            "sourceColumn": "ID_Empresa",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "8ddef346-eeab-4ce1-a8f0-1e6fe646bf35",
+        "partitions": [
+          {
+            "name": "Dim_ID_Empresa",
+            "mode": "import",
+            "queryGroup": "Tabla de Dimensiones",
+            "source": {
+              "expression": [
+                "let",
+                "    Origen = Excel.Workbook(File.Contents(\"Z:\\PRODUCCION BI\\Clasificacion GPF+F.MAROC.xlsx\"), null, true),",
+                "    Dim_ID_Empresa_Sheet = Origen{[Item=\"Dim_ID_Empresa\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Encabezados promovidos\" = Table.PromoteHeaders(Dim_ID_Empresa_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Encabezados promovidos\",{{\"EMPRESA\", type text}, {\"Nombre_ID_Empresa\", type text}, {\"ID_Empresa\", Int64.Type}})",
+                "in",
+                "    #\"Tipo cambiado\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_ID_Planta",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          }
+        ],
+        "columns": [
+          {
+            "name": "ID_Empresa",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "dca9bac1-df11-4bcd-a2ab-54d3d3e0f25c",
+            "sourceColumn": "ID_Empresa",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Nombre_ID_Planta",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "2befecbe-cf60-4379-a864-5a8c253e2964",
+            "sortByColumn": "ID_Planta",
+            "sourceColumn": "Nombre_ID_Planta",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ID_Planta",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "ce1c2596-f5b2-405b-bcad-699c8c0ed008",
+            "sourceColumn": "ID_Planta",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "7fc19342-1dad-4364-b531-852c60dd2f7a",
+        "partitions": [
+          {
+            "name": "Dim_ID_Planta",
+            "mode": "import",
+            "queryGroup": "Tabla de Dimensiones",
+            "source": {
+              "expression": [
+                "let",
+                "    Origen = Excel.Workbook(File.Contents(\"Z:\\PRODUCCION BI\\Clasificacion GPF+F.MAROC.xlsx\"), null, true),",
+                "    Dim_ID_Planta_Sheet = Origen{[Item=\"Dim_ID_Planta\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Encabezados promovidos\" = Table.PromoteHeaders(Dim_ID_Planta_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Encabezados promovidos\",{{\"ID_Empresa\", Int64.Type}, {\"Nombre_ID_Planta\", type text}, {\"ID_Planta\", Int64.Type}})",
+                "in",
+                "    #\"Tipo cambiado\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_ID_Seccion",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          }
+        ],
+        "columns": [
+          {
+            "name": "ID_Planta",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "91521ef9-48d2-429d-818e-616cfcef0309",
+            "sourceColumn": "ID_Planta",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Nombre_ID_Seccion",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "df5e5bcb-d532-40b8-92f2-ef035031bff8",
+            "sortByColumn": "ID_Seccion",
+            "sourceColumn": "Nombre_ID_Seccion",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ID_Seccion",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "9c318b3c-6bf9-4eb8-9590-619bd2624605",
+            "sourceColumn": "ID_Seccion",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "4550234c-9478-49b3-943d-c6c700c7fa04",
+        "partitions": [
+          {
+            "name": "Dim_ID_Seccion",
+            "mode": "import",
+            "queryGroup": "Tabla de Dimensiones",
+            "source": {
+              "expression": [
+                "let",
+                "    Origen = Excel.Workbook(File.Contents(\"Z:\\PRODUCCION BI\\Clasificacion GPF+F.MAROC.xlsx\"), null, true),",
+                "    Dim_ID_Seccion_Sheet = Origen{[Item=\"Dim_ID_Seccion\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Encabezados promovidos\" = Table.PromoteHeaders(Dim_ID_Seccion_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Encabezados promovidos\",{{\"ID_Planta\", Int64.Type}, {\"Nombre_ID_Seccion\", type text}, {\"ID_Seccion\", Int64.Type}})",
+                "in",
+                "    #\"Tipo cambiado\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_ID_Subseccion",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          }
+        ],
+        "columns": [
+          {
+            "name": "ID_Seccion",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "c01e65e0-2559-44bb-a6b7-63ccfe9e9c54",
+            "sourceColumn": "ID_Seccion",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Nombre_ID_Subseccion",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3d943666-0d17-47cb-9204-f9d4a5550b09",
+            "sortByColumn": "ID_Subseccion",
+            "sourceColumn": "Nombre_ID_Subseccion",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ID_Subseccion",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "515480d3-ec19-42c1-a870-58e2d02d4550",
+            "sourceColumn": "ID_Subseccion",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "ccfb263f-1fa1-4904-99ad-337aa44da86c",
+        "partitions": [
+          {
+            "name": "Dim_ID_Subseccion",
+            "mode": "import",
+            "queryGroup": "Tabla de Dimensiones",
+            "source": {
+              "expression": [
+                "let",
+                "    Origen = Excel.Workbook(File.Contents(\"Z:\\PRODUCCION BI\\Clasificacion GPF+F.MAROC.xlsx\"), null, true),",
+                "    Dim_ID_Subseccion_Sheet = Origen{[Item=\"Dim_ID_Subseccion\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Encabezados promovidos\" = Table.PromoteHeaders(Dim_ID_Subseccion_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Encabezados promovidos\",{{\"ID_Seccion\", Int64.Type}, {\"Nombre_ID_Subseccion\", type text}, {\"ID_Subseccion\", Int64.Type}})",
+                "in",
+                "    #\"Tipo cambiado\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Función invocada",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Record"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "64edee2a-3874-44cb-bf69-1481280c7483",
+            "sourceColumn": "Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Value",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "2086b177-03d9-4300-858b-785b313f08f6",
+            "sourceColumn": "Value",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "18ac9d9d-bf52-4bd1-b937-5483f975bcec",
+        "partitions": [
+          {
+            "name": "Función invocada",
+            "mode": "import",
+            "queryGroup": "Diagnóstico",
+            "source": {
+              "expression": [
+                "let",
+                "    Origen = Consulta1(#\"Diagnostics_Aggregated_2024-05-31_13:32\")",
+                "in",
+                "    Origen"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

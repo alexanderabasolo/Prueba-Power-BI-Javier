@@ -1,0 +1,12 @@
+# Extensiones de Power BI ya incluidas
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Evitar archivos temporales de Office y Windows
+~$*
+.DS_Store
+Thumbs.db
+
+# Opcional: Si no quieres que los datos importados (el modelo cargado) 
+# se suban a GitHub por seguridad o tamaño
+*.pbit
